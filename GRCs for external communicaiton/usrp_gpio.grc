@@ -1,0 +1,79 @@
+options:
+  parameters:
+    author: ''
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: usrp_gpio
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Not titled yet
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '32000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 12]
+    rotation: 0
+    state: enabled
+- name: snippet_0
+  id: snippet
+  parameters:
+    alias: ''
+    code: "import uhd\nimport time\n\n# Initialize the USRP device\nusrp = uhd.usrp.MultiUSRP()\n\
+      \n# Choose an available GPIO bank, such as FP0A\ngpio_bank = \"FP0A\"\n\n# Configure\
+      \ GPIO direction\ndirection_mask = 0x01  # Set GPIO pin 0 as output\nusrp.set_gpio_attr(gpio_bank,\
+      \ \"DDR\", direction_mask, direction_mask, 0)  # Use radio index 0\n\n# Commenting\
+      \ out the \"OUT_EN\" line to see if it's necessary\n# output_enable_mask = 0x01\
+      \  # Enable GPIO pin 0 for output\n# usrp.set_gpio_attr(gpio_bank, \"OUT_EN\"\
+      , output_enable_mask, output_enable_mask, 0)  # Use radio index 0\n\n# Infinite\
+      \ loop to toggle GPIO high and low\ntry:\n    while True:\n        # Set the\
+      \ GPIO pin to logic high (1)\n        usrp.set_gpio_attr(gpio_bank, \"OUT\"\
+      , 0x01, 0x01, 0)  # Use radio index 0\n        print(\"GPIO HIGH\")\n      \
+      \  time.sleep(1)\n\n        # Set the GPIO pin to logic low (0)\n        usrp.set_gpio_attr(gpio_bank,\
+      \ \"OUT\", 0x00, 0x01, 0)  # Use radio index 0\n        print(\"GPIO LOW\")\n\
+      \        time.sleep(1)\n\nexcept KeyboardInterrupt:\n    print(\"\\nExiting...\"\
+      )"
+    comment: ''
+    priority: '0'
+    section: main_after_init
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [744, 252.0]
+    rotation: 0
+    state: true
+connections: []
+
+metadata:
+  file_format: 1
