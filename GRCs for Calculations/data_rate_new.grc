@@ -93,18 +93,6 @@ blocks:
     coordinate: [448, 16.0]
     rotation: 0
     state: enabled
-- name: samp_rate_0
-  id: variable
-  parameters:
-    comment: ''
-    value: '256000'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [880, 16.0]
-    rotation: 0
-    state: true
 - name: sps
   id: variable
   parameters:
@@ -117,6 +105,30 @@ blocks:
     coordinate: [632, 16.0]
     rotation: 0
     state: enabled
+- name: usrp_gain
+  id: variable
+  parameters:
+    comment: ''
+    value: '80'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [880, 16.0]
+    rotation: 0
+    state: true
+- name: usrp_samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: 8e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1168, 28.0]
+    rotation: 0
+    state: true
 - name: variable_adaptive_algorithm_0
   id: variable_adaptive_algorithm
   parameters:
@@ -178,7 +190,7 @@ blocks:
     alias: ''
     begin_tag: pmt.PMT_NIL
     comment: ''
-    file: /home/aerolifi/Documents/GRCs/file1.txt
+    file: /home/aerolifi/Documents/all_grcs/GRCs for external communicaiton/input.txt
     length: '0'
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -190,7 +202,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [40, 160.0]
+    coordinate: [32, 148.0]
     rotation: 0
     state: enabled
 - name: blocks_message_debug_0
@@ -222,7 +234,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1016, 320.0]
+    coordinate: [1016, 316.0]
     rotation: 0
     state: enabled
 - name: blocks_null_sink_1
@@ -273,9 +285,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [952, 160.0]
+    coordinate: [896, 152.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_null_sink_1_0_0_0_0
   id: blocks_null_sink
   parameters:
@@ -292,7 +304,7 @@ blocks:
     bus_structure: null
     coordinate: [1272, 704.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_probe_rate_0
   id: blocks_probe_rate
   parameters:
@@ -340,14 +352,14 @@ blocks:
     ignoretag: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
-    samples_per_second: samp_rate*2
+    samples_per_second: '128000'
     type: byte
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [480, 368.0]
+    coordinate: [528, 316.0]
     rotation: 0
     state: disabled
 - name: blocks_uchar_to_float_0
@@ -379,7 +391,7 @@ blocks:
     minoutbuf: '0'
     occupied_carriers: ((-4,-3,-2,-1,1,2,3,4),)
     packet_len_key: '"rx_len"'
-    payload_mod: '"QPSK"'
+    payload_mod: '"8-PSK"'
     pilot_carriers: ((-6,-5,5,6),)
     pilot_symbols: ((-1,1,-1,1),)
     scramble_bits: 'False'
@@ -406,7 +418,7 @@ blocks:
     minoutbuf: '0'
     occupied_carriers: ((-4,-3,-2,-1,1,2,3,4),)
     packet_len_key: len_tag_key
-    payload_mod: '"QPSK"'
+    payload_mod: '"8-PSK"'
     pilot_carriers: ((-6,-5,5,6),)
     pilot_symbols: ((-1,1,-1,1),)
     rolloff: '0'
@@ -417,7 +429,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [744, 256.0]
+    coordinate: [760, 244.0]
     rotation: 0
     state: enabled
 - name: epy_block_0_1
@@ -546,9 +558,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [656, 160.0]
+    coordinate: [648, 148.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: epy_block_0_1_0_1_0
   id: epy_block
   parameters:
@@ -592,7 +604,7 @@ blocks:
     bus_structure: null
     coordinate: [960, 704.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: limesdr_sink_0
   id: limesdr_sink
   parameters:
@@ -619,12 +631,12 @@ blocks:
     pa_path_ch1: '255'
     rf_freq: 30e6
     samp_rate: samp_rate
-    serial: 1D3AD634EA32BC
+    serial: 1D3AC688509AB7
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1248, 16.0]
+    coordinate: [1160, 492.0]
     rotation: 0
     state: disabled
 - name: limesdr_source_0_0
@@ -655,7 +667,7 @@ blocks:
     oversample: '0'
     rf_freq: 30e6
     samp_rate: samp_rate
-    serial: 1D3AD634EA32BC
+    serial: 1D3AC688509AB7
   states:
     bus_sink: false
     bus_source: false
@@ -1051,7 +1063,7 @@ blocks:
     ant7: '"TX/RX"'
     ant8: '"TX/RX"'
     ant9: '"TX/RX"'
-    bw0: 20e6
+    bw0: 10e6
     bw1: '0'
     bw10: '0'
     bw11: '0'
@@ -1127,7 +1139,7 @@ blocks:
     comment: ''
     dev_addr: ''
     dev_args: ''
-    gain0: '40'
+    gain0: usrp_gain
     gain1: '0'
     gain10: '0'
     gain11: '0'
@@ -1261,7 +1273,7 @@ blocks:
     nchan: '1'
     num_mboards: '1'
     otw: ''
-    samp_rate: 10e6
+    samp_rate: usrp_samp_rate
     sd_spec0: ''
     sd_spec1: ''
     sd_spec2: ''
@@ -1288,7 +1300,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1280, 304.0]
+    coordinate: [1288, 292.0]
     rotation: 0
     state: enabled
 - name: uhd_usrp_source_0
@@ -1328,7 +1340,7 @@ blocks:
     ant7: '"RX2"'
     ant8: '"RX2"'
     ant9: '"RX2"'
-    bw0: 20e6
+    bw0: 10e6
     bw1: '0'
     bw10: '0'
     bw11: '0'
@@ -1468,7 +1480,7 @@ blocks:
     dc_offs_enb9: default
     dev_addr: '""'
     dev_args: ''
-    gain0: '40'
+    gain0: usrp_gain
     gain1: '0'
     gain10: '0'
     gain11: '0'
@@ -1697,7 +1709,7 @@ blocks:
     rx_agc7: Default
     rx_agc8: Default
     rx_agc9: Default
-    samp_rate: 10e6
+    samp_rate: usrp_samp_rate
     sd_spec0: ''
     sd_spec1: ''
     sd_spec2: ''
@@ -1708,7 +1720,7 @@ blocks:
     sd_spec7: ''
     show_lo_controls: 'False'
     start_time: '-1.0'
-    stream_args: peak=0.003906
+    stream_args: ''
     stream_chans: '[]'
     sync: pc_clock
     time_source0: ''
@@ -1737,9 +1749,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1232, 464.0]
+    coordinate: [1360, 492.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: virtual_source_0
   id: virtual_source
   parameters:
@@ -1750,7 +1762,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [208, 800.0]
+    coordinate: [224, 748.0]
     rotation: 0
     state: disabled
 
@@ -1767,7 +1779,6 @@ connections:
 - [blocks_stream_to_tagged_stream_0, '0', digital_ofdm_tx_0, '0']
 - [blocks_stream_to_tagged_stream_0, '0', epy_block_0_1_0_1, '0']
 - [blocks_throttle_0, '0', digital_ofdm_tx_0, '0']
-- [blocks_throttle_0, '0', epy_block_0_1_0_1, '0']
 - [blocks_uchar_to_float_0, '0', qtgui_time_sink_x_0, '0']
 - [digital_ofdm_rx_0, '0', blocks_file_sink_0_0_1, '0']
 - [digital_ofdm_rx_0, '0', blocks_uchar_to_float_0, '0']
@@ -1782,6 +1793,7 @@ connections:
 - [uhd_usrp_source_0, '0', digital_ofdm_rx_0, '0']
 - [uhd_usrp_source_0, '0', epy_block_0_1, '0']
 - [uhd_usrp_source_0, '0', qtgui_freq_sink_x_0_0, '0']
+- [virtual_source_0, '0', digital_ofdm_rx_0, '0']
 - [virtual_source_0, '0', qtgui_freq_sink_x_0_0, '0']
 
 metadata:

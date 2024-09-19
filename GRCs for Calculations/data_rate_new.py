@@ -32,8 +32,8 @@ from PyQt5 import Qt
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
-from gnuradio import uhd
-import time
+import data_rate_new_epy_block_0_1_0_1 as epy_block_0_1_0_1  # embedded python block
+import data_rate_new_epy_block_0_1_0_1_0 as epy_block_0_1_0_1_0  # embedded python block
 
 
 
@@ -77,8 +77,9 @@ class data_rate_new(gr.top_block, Qt.QWidget):
         ##################################################
         self.variable_constellation_1 = variable_constellation_1 = digital.constellation_bpsk().base()
         self.variable_adaptive_algorithm_0 = variable_adaptive_algorithm_0 = digital.adaptive_algorithm_cma( variable_constellation_1, .0005, 2).base()
+        self.usrp_samp_rate = usrp_samp_rate = 8e6
+        self.usrp_gain = usrp_gain = 80
         self.sps = sps = 4
-        self.samp_rate_0 = samp_rate_0 = 256000
         self.samp_rate = samp_rate = 64000
         self.packet_len = packet_len = 50
         self.nfilts = nfilts = 32
@@ -88,37 +89,8 @@ class data_rate_new(gr.top_block, Qt.QWidget):
         ##################################################
         # Blocks
         ##################################################
-        self.uhd_usrp_source_0 = uhd.usrp_source(
-            ",".join(("", '')),
-            uhd.stream_args(
-                cpu_format="fc32",
-                args='peak=0.003906',
-                channels=list(range(0,1)),
-            ),
-        )
-        self.uhd_usrp_source_0.set_samp_rate(10e6)
-        self.uhd_usrp_source_0.set_time_now(uhd.time_spec(time.time()), uhd.ALL_MBOARDS)
-
-        self.uhd_usrp_source_0.set_center_freq(19e06, 0)
-        self.uhd_usrp_source_0.set_antenna('A', 0)
-        self.uhd_usrp_source_0.set_bandwidth(20e6, 0)
-        self.uhd_usrp_source_0.set_gain(40, 0)
-        self.uhd_usrp_sink_0 = uhd.usrp_sink(
-            ",".join(('', '')),
-            uhd.stream_args(
-                cpu_format="fc32",
-                args='',
-                channels=list(range(0,1)),
-            ),
-            "",
-        )
-        self.uhd_usrp_sink_0.set_samp_rate(10e6)
-        self.uhd_usrp_sink_0.set_time_now(uhd.time_spec(time.time()), uhd.ALL_MBOARDS)
-
-        self.uhd_usrp_sink_0.set_center_freq(19e06, 0)
-        self.uhd_usrp_sink_0.set_antenna('A', 0)
-        self.uhd_usrp_sink_0.set_bandwidth(20e6, 0)
-        self.uhd_usrp_sink_0.set_gain(40, 0)
+        self.epy_block_0_1_0_1_0 = epy_block_0_1_0_1_0.blk(example_param=1.0)
+        self.epy_block_0_1_0_1 = epy_block_0_1_0_1.blk(example_param=1.0)
         self.digital_ofdm_tx_0 = digital.ofdm_tx(
             fft_len=fft_len,
             cp_len=fft_len//4,
@@ -129,7 +101,7 @@ class data_rate_new(gr.top_block, Qt.QWidget):
             sync_word1=None,
             sync_word2=None,
             bps_header=1,
-            bps_payload=2,
+            bps_payload=3,
             rolloff=0,
             debug_log=False,
             scramble_bits=False)
@@ -143,12 +115,14 @@ class data_rate_new(gr.top_block, Qt.QWidget):
             sync_word1=None,
             sync_word2=None,
             bps_header=1,
-            bps_payload=2,
+            bps_payload=3,
             debug_log=False,
             scramble_bits=False)
         self.blocks_stream_to_tagged_stream_0 = blocks.stream_to_tagged_stream(gr.sizeof_char, 1, packet_len, len_tag_key)
+        self.blocks_null_sink_1_0_0_0_0 = blocks.null_sink(gr.sizeof_char*1)
+        self.blocks_null_sink_1_0_0_0 = blocks.null_sink(gr.sizeof_char*1)
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_cc(0.25)
-        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_char*1, '/home/aerolifi/Documents/GRCs/file1.txt', True, 0, 0)
+        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_char*1, '/home/aerolifi/Documents/all_grcs/GRCs for external communicaiton/input.txt', True, 0, 0)
         self.blocks_file_source_0.set_begin_tag(pmt.PMT_NIL)
         self.blocks_file_sink_0_0_1 = blocks.file_sink(gr.sizeof_char*1, '/dev/pts/4', False)
         self.blocks_file_sink_0_0_1.set_unbuffered(False)
@@ -158,11 +132,14 @@ class data_rate_new(gr.top_block, Qt.QWidget):
         # Connections
         ##################################################
         self.connect((self.blocks_file_source_0, 0), (self.blocks_stream_to_tagged_stream_0, 0))
-        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.uhd_usrp_sink_0, 0))
+        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.digital_ofdm_rx_0, 0))
         self.connect((self.blocks_stream_to_tagged_stream_0, 0), (self.digital_ofdm_tx_0, 0))
+        self.connect((self.blocks_stream_to_tagged_stream_0, 0), (self.epy_block_0_1_0_1, 0))
         self.connect((self.digital_ofdm_rx_0, 0), (self.blocks_file_sink_0_0_1, 0))
+        self.connect((self.digital_ofdm_rx_0, 0), (self.epy_block_0_1_0_1_0, 0))
         self.connect((self.digital_ofdm_tx_0, 0), (self.blocks_multiply_const_vxx_0, 0))
-        self.connect((self.uhd_usrp_source_0, 0), (self.digital_ofdm_rx_0, 0))
+        self.connect((self.epy_block_0_1_0_1, 0), (self.blocks_null_sink_1_0_0_0, 0))
+        self.connect((self.epy_block_0_1_0_1_0, 0), (self.blocks_null_sink_1_0_0_0_0, 0))
 
 
     def closeEvent(self, event):
@@ -185,17 +162,23 @@ class data_rate_new(gr.top_block, Qt.QWidget):
     def set_variable_adaptive_algorithm_0(self, variable_adaptive_algorithm_0):
         self.variable_adaptive_algorithm_0 = variable_adaptive_algorithm_0
 
+    def get_usrp_samp_rate(self):
+        return self.usrp_samp_rate
+
+    def set_usrp_samp_rate(self, usrp_samp_rate):
+        self.usrp_samp_rate = usrp_samp_rate
+
+    def get_usrp_gain(self):
+        return self.usrp_gain
+
+    def set_usrp_gain(self, usrp_gain):
+        self.usrp_gain = usrp_gain
+
     def get_sps(self):
         return self.sps
 
     def set_sps(self, sps):
         self.sps = sps
-
-    def get_samp_rate_0(self):
-        return self.samp_rate_0
-
-    def set_samp_rate_0(self, samp_rate_0):
-        self.samp_rate_0 = samp_rate_0
 
     def get_samp_rate(self):
         return self.samp_rate
