@@ -4,6 +4,8 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
+# python3 tx_waveforms.py -a "addr=192.168.10.2" -w sine -f 19e6 -r 10e6 -d 5 -c 0 -g 10 --wave-freq 1e4 --wave-ampl 0.3
+
 """
 Generate and TX samples using a set of waveforms, and waveform characteristics
 """

@@ -4,6 +4,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
+# python3 rx_to_file.py -a "addr=192.168.10.2" -o output.dat -f 19e6 -r 10e6 -d 5 -c 0 -g 10
 """
 RX samples to file using Python API
 """

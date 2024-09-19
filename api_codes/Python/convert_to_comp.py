@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Load the raw samples from the file
-samples = np.fromfile('samples_rx.dat', dtype=np.complex64)  # Assuming the samples are stored as 32-bit complex
-inital_samples = samples[:10]
+samples = np.fromfile('output.dat', dtype=np.complex64)  # Assuming the samples are stored as 32-bit complex
+inital_samples = samples[300:3000]
 
 # Display the first few samples
 print(inital_samples)
