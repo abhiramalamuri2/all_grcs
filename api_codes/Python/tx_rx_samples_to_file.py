@@ -5,7 +5,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 # python3 tx_rx_samples_to_file.py -a "addr=192.168.10.2" -o output.dat -w sine -f 19e6 -r 10e6 -d 5 -c 0 -g 12 --wave-freq 1e4 --wave-ampl 0.3
-# python3 tx_rx_samples_to_file.py -a "addr=192.168.10.2" -o output.dat -w sine -f 19e6 -r 10e6 -d 5 -c 0 -g 12 --wave-freq 1e4 --wave-ampl 0.3
+
+
+# Run this for the best waveform
+# python3 tx_rx_samples_to_file.py -a "addr=192.168.10.2" -o output.dat -w sine -f 19e6 -r 25000 -d 5 -c 0 -g 12 --wave-freq 1000 --wave-ampl 0.3
 """
 RX samples to file using Python API and TX samples based on input arguments
 """
@@ -63,7 +66,7 @@ def main():
     #time.sleep(1)
 
     samps = usrp.recv_num_samps(num_samps, args.freq, args.rate, args.channels, args.gain)
-    samps = samps[0:100]
+    samps = samps[0:1000]
     with open(args.output_file, 'wb') as out_file:
         if args.numpy:
             np.save(out_file, samps, allow_pickle=False, fix_imports=False)
