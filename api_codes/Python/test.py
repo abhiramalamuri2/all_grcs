@@ -24,7 +24,11 @@ WAVEFORMS = {
     "square": lambda n, tone_offset, rate: np.sign(WAVEFORMS["sine"](n, tone_offset, rate)),
     "const": lambda n, tone_offset, rate: 1 + 1j,
     "ramp": lambda n, tone_offset, rate:
-            2*(n*(tone_offset/rate) - np.floor(float(0.5 + n*(tone_offset/rate))))
+            2*(n*(tone_offset/rate) - np.floor(float(0.5 + n*(tone_offset/rate)))),
+    "sine_exp": lambda n, tone_offset, rate: np.exp(0.001 * n) * np.exp(n * 2j * np.pi * tone_offset / rate),
+    # New waveform for "Hello World"
+    "hello_world": lambda n, tone_offset, rate: np.array([ord(char) for char in "Hello World"])
+
 }
 
 def parse_args():
@@ -36,7 +40,7 @@ def parse_args():
         "-w", "--waveform", default="sine", choices=WAVEFORMS.keys(), type=str)
     parser.add_argument("-f", "--freq", type=float, required=True)
     parser.add_argument("-r", "--rate", default=1e6, type=float)
-    parser.add_argument("-d", "--duration", default=5.0, type=float)
+    parser.add_argument("-d", "--duration", default= 5.0, type=float)
     parser.add_argument("-c", "--channels", default=0, nargs="+", type=int)
     parser.add_argument("-g", "--gain", type=int, default=10)
     parser.add_argument("--wave-freq", default=1e4, type=float)
@@ -50,6 +54,7 @@ def main():
     args = parse_args()
     usrp = uhd.usrp.MultiUSRP(args.args)
     num_samps = int(np.ceil(args.duration*args.rate))
+    print(num_samps)
     
     if not isinstance(args.channels, list):
         args.channels = [args.channels]    
@@ -57,9 +62,11 @@ def main():
     data = np.array(
         list(map(lambda n: args.wave_ampl * WAVEFORMS[args.waveform](n, args.wave_freq, args.rate),
                  np.arange(
-                     int(10 * np.floor(args.rate / args.wave_freq)),
+                     int(20 * np.floor(args.rate / args.wave_freq)),
                      dtype=np.complex64))),
         dtype=np.complex64)  # One period
+    
+    print('Tx Data length: ' + str(len(data)))
 
     # Save the transmitted samples (input) to input.dat
     with open('input.dat', 'wb') as input_file:
@@ -72,17 +79,25 @@ def main():
     tx_rate = len(data) / (end_tx - start_tx)
     time_diff_tx = end_tx - start_tx
     #print(f"Num samples transmitted: {len(data):.2f} samples/s")
-    print(f"Transmission Rate: {len(data) / (end_tx - start_tx):.2f} samples/s")
+    #print(f"Transmission Rate: {len(data) / args.duration:.2f} samples/s")
 
     #time.sleep(1)
 
     start_rx = time.time()
     samps = usrp.recv_num_samps(num_samps, args.freq, args.rate, args.channels, args.gain)
+    # for i in samps[0]:
+    #     print(i)
     end_rx = time.time()
+
+    threshold = 0.001  # Set your desired threshold value
+
+    # Calculate the magnitudes and filter samples
+    filtered_samples = [sample for sample in samps[0] if np.abs(sample) > threshold]
+
     time_diff_rx = end_rx - start_rx
     rx_rate = len(samps[0]) / (end_rx - start_rx)
-    #print(f"Num samples received: {len(samps[0]):.2f} samples/s")
-    print(f"Receiving Rate: {len(samps[0]) / (end_rx - start_rx):.2f} samples/s")
+    print(f"Num samples received: {len(filtered_samples):.2f} samples")
+    #print(f"Receiving Rate: {len(samps[0]) / (end_rx - start_rx):.2f} samples/s")
     #samps = samps[0:1000]
     with open(args.output_file, 'w') as out_file:
         if args.numpy:

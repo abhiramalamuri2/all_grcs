@@ -13,6 +13,7 @@ import numpy as np
 import uhd
 import time
 
+
 WAVEFORMS = {
     "sine": lambda n, tone_offset, rate: np.exp(n * 2j * np.pi * tone_offset / rate),
     "square": lambda n, tone_offset, rate: np.sign(WAVEFORMS["sine"](n, tone_offset, rate)),
@@ -20,6 +21,7 @@ WAVEFORMS = {
     "ramp": lambda n, tone_offset, rate:
             2*(n*(tone_offset/rate) - np.floor(float(0.5 + n*(tone_offset/rate))))
 }
+
 
 def text_to_bits(text):
     """Convert text to binary."""
@@ -36,7 +38,17 @@ def bpsk_modulate(bitstring):
 
 def bpsk_demodulate(samples):
     """Demodulate BPSK symbols back into bits."""
-    return ''.join(['1' if sample.real > 0 else '0' for sample in samples])
+    # bitstring = ''
+    # for i in samples[0]:
+    #     if i > 0:
+    #         bitstring+='1'
+    #     else:
+    #         bitstring+='0'
+    # return bitstring
+    return ''.join(['1' if sample.real > 0 else '0' for sample in samples[0]])
+
+
+
 
 def parse_args():
     """Parse the command line arguments"""
@@ -88,6 +100,7 @@ def main():
 
     # Convert bits back to text
     received_text = bits_to_text(demodulated_bits[:len(bitstring)])  # Trim to the original length
+    #received_text = bits_to_text(demodulated_bits)
     print("Received Text:", received_text)
 
     # Save the received samples to file
